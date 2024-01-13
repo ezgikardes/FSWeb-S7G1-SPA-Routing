@@ -3,11 +3,13 @@ import ReactDOM from 'react-dom/client';
 
 import './index.css';
 import App from './App';
+import { BrowserRouter } from 'react-router-dom';
 
-
-// Routeların çalışması için <App /> öğesini düzenlemeniz gerekir
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <App />
+    //Router özelliği kullanmamız için App componentini BroserRouter (Provider) component'i ile wrapledik: 
+    <BrowserRouter>
+        <App />
+    </BrowserRouter>
 );

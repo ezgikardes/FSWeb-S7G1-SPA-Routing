@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Switch, Route } from 'react-router-dom';
+import FilmListesi from './Filmler/FilmListesi';
+import Film from './Filmler/Film';
 
 import KaydedilenlerListesi from './Filmler/KaydedilenlerListesi';
 
@@ -10,11 +13,9 @@ export default function App () {
   useEffect(() => {
     const FilmleriAl = () => {
       axios
-        .get('http://localhost:5001/api/filmler') // Burayı Postman'le çalışın
-        .then(response => {
-          // Bu kısmı log statementlarıyla çalışın
-          // ve burdan gelen response'u 'movieList' e aktarın
-        })
+        .get('http://localhost:5001/api/filmler') 
+        .then(response => {setMovieList(response.data);
+        }) //gelen datayı movieList state'ine setledik.
         .catch(error => {
           console.error('Sunucu Hatası', error);
         });
@@ -29,8 +30,18 @@ export default function App () {
   return (
     <div>
       <KaydedilenlerListesi list={[ /* Burası esnek */]} />
-
-      <div>Bu Div'i kendi Routelarınızla değiştirin</div>
+      <Switch>
+        <Route exact path="/">
+          <FilmListesi movies={movieList} />
+        </Route>
+        <Route exact path="/filmler/:id">
+          <Film />
+        </Route>
+      </Switch>
     </div>
   );
 }
+
+//İki tane route'umuz var. 
+//1)FilmListesi: Bu componant'a prop olarak gidecek olan bir "movies" datası var. Bu prop'a, yukarıda useEffect'le aldığımız API verisini set ettiğimiz movieList state'ini gönderdik.
+//2)Film: 

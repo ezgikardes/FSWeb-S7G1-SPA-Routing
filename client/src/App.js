@@ -23,19 +23,26 @@ export default function App () {
     FilmleriAl();
   }, []);
 
-  const KaydedilenlerListesineEkle = id => {
-    // Burası esnek. Aynı filmin birden fazla kez "saved" e eklenmesini engelleyin
+
+      // Burası esnek. Aynı filmin birden fazla kez "saved" e eklenmesini engelleyeceğiz. Bu fonksiyon, FilmCard bileşenindeki ve Anasayfadaki Kaydet butonuna prop olarak gitmeli. Anasayfaya doğrudan gidebilir ama FilmCard öncesinde mutlaka Film bileşenine de gitmeli.Çünkü FilmCard'ı orası render ediyor.
+  const KaydedilenlerListesineEkle = movie => {
+        if (!saved.find((m) => m.id === movie.id) ) {
+          setSaved([...saved, movie ])
+        } // eğer gelen movie'nin id'si mevcut listede yoksa, bu movie'yi saved state'e ekle, varsa ekleme dedik. 
   };
 
   return (
     <div>
-      <KaydedilenlerListesi list={[ /* Burası esnek */]} />
+      <KaydedilenlerListesi list={saved} />
       <Switch>
         <Route exact path="/">
-          <FilmListesi movies={movieList} />
+          <FilmListesi 
+            movies={movieList} 
+            KaydedilenlerListesineEkle={KaydedilenlerListesineEkle}
+          />
         </Route>
         <Route exact path="/filmler/:id">
-          <Film />
+          <Film KaydedilenlerListesineEkle={KaydedilenlerListesineEkle} />
         </Route>
       </Switch>
     </div>
@@ -44,4 +51,4 @@ export default function App () {
 
 //İki tane route'umuz var. 
 //1)FilmListesi: Bu componant'a prop olarak gidecek olan bir "movies" datası var. Bu prop'a, yukarıda useEffect'le aldığımız API verisini set ettiğimiz movieList state'ini gönderdik.
-//2)Film: 
+//2)Film: sondaki /:id parametresi ile adresi dinamik hale getirdik. Bileşende, useParams() hooku ile bu parametreyi bir değişkene atayacağız. 
